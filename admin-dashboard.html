@@ -73,7 +73,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Total Users</p>
-                            <p class="text-2xl font-semibold text-gray-900">108</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="1008">0</p>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Total Events</p>
-                            <p class="text-2xl font-semibold text-gray-900">43</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="143">0</p>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Active NGOs</p>
-                            <p class="text-2xl font-semibold text-gray-900">17</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="67">0</p>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Active Volunteers</p>
-                            <p class="text-2xl font-semibold text-gray-900">89</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="589">0</p>
                         </div>
                     </div>
                 </div>
@@ -345,18 +345,6 @@
             </div>
         </div>
     </div>
-    <!-- Show pop-up -->
-     <!--
-    <script>
-        function showCreateEventModal() {
-            alert('Create Event Modal would open here');
-        }
-
-        function showCreateUserModal() {
-            alert('Create User Modal would open here');
-        }
-    </script>
-     -->
     
 
 <footer class="bg-gray-800 text-white py-6 text-center">
@@ -396,5 +384,41 @@
     </a>
   </div>
 </footer>
+    <!-- Count-up Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const counters = document.querySelectorAll('.counter');
+        const speed = 100; // lower = faster
+
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = Math.ceil(target / speed);
+
+                if (count < target) {
+                    counter.innerText = count + increment;
+                    setTimeout(updateCount, 20);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    });
+</script>
+
+<!--
+<script>
+    function showCreateEventModal() {
+        alert('Create Event Modal would open here');
+    }
+
+     function showCreateUserModal() {
+        alert('Create User Modal would open here');
+     }
+</script>
+-->  
+
 </body>
 </html>
