@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Volunteer dashboard for managing and joining community events">
     <title>Volunteer Dashboard - Event Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
@@ -24,13 +26,41 @@
                             600: '#059669',
                             700: '#047857',
                         }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite'
                     }
                 }
             }
         }
     </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .event-card {
+            transition: all 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen flex flex-col">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,32 +76,125 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-500">Welcome, Volunteer</span>
-                    <a href="index.html" class="text-sm text-red-600 hover:text-red-800 transition-colors font-medium">Logout</a>
+                    
+                    <div class="relative">
+                        <button onclick="toggleNotifications()" class="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-500 relative">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full"></span>
+                        </button>
+                        <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50">
+                            <div class="px-4 py-2 border-b border-gray-200">
+                                <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto">
+                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-accent-100 text-accent-600 flex items-center justify-center">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="font-medium">Upcoming Event Reminder</p>
+                                            <p class="text-xs text-gray-500">Your volunteer shift starts in 2 hours</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="font-medium">Registration Confirmed</p>
+                                            <p class="text-xs text-gray-500">You've been confirmed for the Beach Cleanup</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="font-medium">New Event Available</p>
+                                            <p class="text-xs text-gray-500">Food distribution event added for next week</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="px-4 py-2 border-t border-gray-200">
+                                <a href="#" class="text-xs font-medium text-accent-600 hover:text-accent-700">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative group">
+    <button id="user-menu-button" class="flex items-center space-x-1 focus:outline-none">
+        <span class="text-sm text-gray-700">
+            Welcome, <span class="font-medium">Volunteer</span>
+        </span>
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+
+    <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <!-- Profile Icon -->
+            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.879 6.196M15 15a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Profile
+        </a>
+        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <!-- Settings Icon -->
+            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.591 1.01c1.52-.88 3.391.991 2.511 2.511a1.724 1.724 0 001.01 2.591c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.01 2.591c.88 1.52-.991 3.391-2.511 2.511a1.724 1.724 0 00-2.591 1.01c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.591-1.01c-1.52.88-3.391-.991-2.511-2.511a1.724 1.724 0 00-1.01-2.591c-1.756-.426-1.756-2.924 0-3.35.88-1.52-.991-3.391 2.511-2.511 1.52-.88 3.391.991 2.511 2.511z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings
+        </a>
+        <a href="index.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
+            <!-- Logout Icon -->
+            <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+            </svg>
+            Logout
+        </a>
+    </div>
+</div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 flex-grow">
         <div class="px-4 py-6 sm:px-0">
             <!-- Stats Overview -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow fade-in">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-primary-100 text-primary-600">
+                        <div class="p-3 rounded-full bg-accent-100 text-accent-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Total Users</p>
-                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="1008">0</p>
+                            <p class="text-sm font-medium text-gray-600">Total Hours Volunteered</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="127">0</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow fade-in" style="animation-delay: 0.1s;">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-secondary-100 text-secondary-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,69 +202,166 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Total Events</p>
-                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="143">0</p>
+                            <p class="text-sm font-medium text-gray-600">Upcoming Events</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="5">0</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow fade-in" style="animation-delay: 0.2s;">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-accent-100 text-accent-600">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Active NGOs</p>
-                            <p class="text-2xl font-semibold text-gray-900 counter"  data-target="67">0</p>
+                            <p class="text-sm font-medium text-gray-600">Completed Events</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="23">0</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow fade-in" style="animation-delay: 0.3s;">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Active Volunteers</p>
-                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="589">0</p>
+                            <p class="text-sm font-medium text-gray-600">Your Impact Score</p>
+                            <p class="text-2xl font-semibold text-gray-900 counter" data-target="89">0</p>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- Header Section -->
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Available Events</h2>
-                <p class="text-gray-600">Find and join volunteer opportunities that match your interests</p>
+            <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1">Available Events</h2>
+                    <p class="text-gray-600">Find and join volunteer opportunities that match your interests</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <select id="filter-category" class="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500">
+                            <option value="">All Categories</option>
+                            <option value="environment">Environment</option>
+                            <option value="education">Education</option>
+                            <option value="health">Health</option>
+                            <option value="community">Community</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <select id="filter-location" class="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500">
+                            <option value="">All Locations</option>
+                            <option value="university">University</option>
+                            <option value="smart-city">Smart City</option>
+                            <option value="library">Library</option>
+                            <option value="hall">YKSG-1 Hall</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Search Bar -->
             <div class="mb-6">
-                <div class="max-w-lg">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <input 
-                            type="text" 
-                            placeholder="Search events by title, location, or description..." 
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition-all duration-200"
-                            oninput="searchEvents(this.value)"
-                        >
+                <div class="max-w-lg relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
                     </div>
+                    <input 
+                        type="text" 
+                        id="event-search"
+                        placeholder="Search events by title, location, or description..." 
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition-all duration-200"
+                        aria-label="Search events"
+                    >
+                    <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div id="loading-skeleton" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="skeleton h-6 w-3/4 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-1/2 mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-2/3 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-4 rounded"></div>
+                        <div class="flex space-x-2">
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="skeleton h-6 w-3/4 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-1/2 mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-2/3 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-4 rounded"></div>
+                        <div class="flex space-x-2">
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="skeleton h-6 w-3/4 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-1/2 mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-2/3 mb-4 rounded"></div>
+                        <div class="skeleton h-4 w-full mb-4 rounded"></div>
+                        <div class="flex space-x-2">
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                            <div class="skeleton h-10 w-full rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden bg-white rounded-lg shadow p-8 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">No events found</h3>
+                <p class="mt-1 text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
+                <div class="mt-6">
+                    <button onclick="resetFilters()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-accent-600 hover:bg-accent-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500">
+                        Reset Filters
+                    </button>
                 </div>
             </div>
 
             <!-- Events Grid -->
             <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Event Card 1 -->
-                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden transform hover:scale-105">
+                <div class="event-card bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden fade-in" data-category="environment" data-location="university">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-semibold text-gray-900">University Cleanup Drive</h3>
@@ -176,18 +396,24 @@
                         </div>
                         <p class="text-gray-700 text-sm mb-4">Join us for a community cleanup to protect our environment and keep our university beautiful for everyone to enjoy.</p>
                         <div class="flex space-x-2">
-                            <button onclick="viewEventDetails('beach-cleanup')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                View Details
+                            <button onclick="viewEventDetails('beach-cleanup')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Details
                             </button>
-                            <button onclick="joinEvent(this, 'Beach Cleanup Drive')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Join Event
+                            <button onclick="joinEvent(this, 'University Cleanup Drive')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Join
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Event Card 2 -->
-                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden transform hover:scale-105">
+                <div class="event-card bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden fade-in" data-category="community" data-location="smart-city" style="animation-delay: 0.1s;">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-semibold text-gray-900">Food Distribution</h3>
@@ -222,18 +448,24 @@
                         </div>
                         <p class="text-gray-700 text-sm mb-4">Help distribute meals to families in need. We'll be providing fresh food packages and warm meals to the local community.</p>
                         <div class="flex space-x-2">
-                            <button onclick="viewEventDetails('food-distribution')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                View Details
+                            <button onclick="viewEventDetails('food-distribution')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Details
                             </button>
-                            <button onclick="joinEvent(this, 'Food Distribution')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Join Event
+                            <button onclick="joinEvent(this, 'Food Distribution')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Join
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Event Card 3 -->
-                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden transform hover:scale-105">
+                <div class="event-card bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden fade-in" data-category="environment" data-location="smart-city" style="animation-delay: 0.2s;">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-semibold text-gray-900">Tree Planting</h3>
@@ -268,18 +500,24 @@
                         </div>
                         <p class="text-gray-700 text-sm mb-4">Help us plant native trees to restore the urban forest and combat climate change in our community. All tools and refreshments provided.</p>
                         <div class="flex space-x-2">
-                            <button onclick="viewEventDetails('tree-planting')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                View Details
+                            <button onclick="viewEventDetails('tree-planting')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Details
                             </button>
-                            <button onclick="joinEvent(this, 'Tree Planting')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Join Event
+                            <button onclick="joinEvent(this, 'Tree Planting')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Join
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Event Card 4 -->
-                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden transform hover:scale-105">
+                <div class="event-card bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden fade-in" data-category="education" data-location="library" style="animation-delay: 0.3s;">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-semibold text-gray-900">Educational Workshop</h3>
@@ -314,18 +552,24 @@
                         </div>
                         <p class="text-gray-700 text-sm mb-4">Educational workshop on sustainable living practices for local community members. Learn about eco-friendly lifestyle choices.</p>
                         <div class="flex space-x-2">
-                            <button onclick="viewEventDetails('workshop')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                View Details
+                            <button onclick="viewEventDetails('workshop')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Details
                             </button>
-                            <button onclick="joinEvent(this, 'Educational Workshop')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Join Event
+                            <button onclick="joinEvent(this, 'Educational Workshop')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Join
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Event Card 5 -->
-                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden transform hover:scale-105">
+                <div class="event-card bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden fade-in" data-category="community" data-location="hall" style="animation-delay: 0.4s;">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-semibold text-gray-900">Senior Care Visit</h3>
@@ -360,13 +604,53 @@
                         </div>
                         <p class="text-gray-700 text-sm mb-4">Spend time with elderly residents, play games, share stories, and provide companionship to brighten their day.</p>
                         <div class="flex space-x-2">
-                            <button onclick="viewEventDetails('senior-care')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                View Details
+                            <button onclick="viewEventDetails('senior-care')" class="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Details
                             </button>
-                            <button onclick="joinEvent(this, 'Senior Care Visit')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                Join Event
+                            <button onclick="joinEvent(this, 'Senior Care Visit')" class="flex-1 bg-accent-600 text-white hover:bg-accent-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Join
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
+                <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">12</span> events
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                            <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-accent-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600">1</a>
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+                            <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                            <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
+                            <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l4.5 4.25a.75.75 0 11-1.04 1.08L11.168 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -379,7 +663,7 @@
             <div class="mt-3">
                 <div class="flex justify-between items-center mb-6">
                     <h3 id="modal-event-title" class="text-xl font-medium text-gray-900"></h3>
-                    <button onclick="hideEventDetails()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <button onclick="hideEventDetails()" class="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -392,45 +676,221 @@
             </div>
         </div>
     </div>
-<!-- Count-up Script -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const counters = document.querySelectorAll('.counter');
-        const speed = 100; // lower = faster
 
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = Math.ceil(target / speed);
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 lg:w-1/3 max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 id="confirmation-title" class="text-lg leading-6 font-medium text-gray-900 mt-3"></h3>
+                <div class="mt-2">
+                    <p id="confirmation-message" class="text-sm text-gray-500"></p>
+                </div>
+                <div class="mt-4 flex justify-center space-x-3">
+                    <button onclick="hideConfirmation()" type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Close
+                    </button>
+                    <button id="confirmation-action-button" onclick="confirmAction()" type="button" class="px-4 py-2 bg-accent-600 text-white rounded-md hover:bg-accent-700 focus:outline-none focus:ring-2 focus:ring-accent-500">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                if (count < target) {
-                    counter.innerText = count + increment;
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            updateCount();
-        });
-    });
-</script>
+     <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold">VolunteerHub</span>
+                    </div>
+                    <p class="text-gray-400">Connecting passionate volunteers with meaningful opportunities to create positive change in communities worldwide.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Testimonials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2025 VolunteerHub. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/MAHMUDUNNAB1" target="_blank" class="text-gray-400 hover:text-white transition" aria-label="Facebook">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.77l-.44 2.89h-2.33v6.99C18.34 21.13 22 17 22 12z"/>
+                        </svg>
+                    </a>
+                    <!-- Twitter -->
+                    <a href="https://x.com/MahmudU00814521" target="_blank" class="text-gray-400 hover:text-white transition" aria-label="Twitter">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4 1.64a9.09 9.09 0 01-2.88 1.1A4.52 4.52 0 0016.62.49a4.49 4.49 0 00-4.38 5.52A12.94 12.94 0 013 2.24a4.51 4.51 0 001.39 6.01A4.5 4.5 0 012 7.16v.06a4.52 4.52 0 003.61 4.42 4.52 4.52 0 01-2.03.08 4.52 4.52 0 004.21 3.13A9.05 9.05 0 012 19.54 12.86 12.86 0 008.29 21c7.55 0 11.67-6.26 11.67-11.7 0-.18-.01-.36-.02-.54A8.36 8.36 0 0023 3z"/>
+                        </svg>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/mahmud.un.nabi/" target="_blank" class="text-gray-400 hover:text-white transition" aria-label="Instagram">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 2.2c3.2 0 3.584.012 4.85.07 1.17.054 1.98.24 2.43.4.59.21 1.01.46 1.45.9.44.44.69.86.9 1.45.16.45.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.98-.4 2.43a3.37 3.37 0 01-.9 1.45 3.37 3.37 0 01-1.45.9c-.45.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.98-.24-2.43-.4a3.37 3.37 0 01-1.45-.9 3.37 3.37 0 01-.9-1.45c-.16-.45-.35-1.26-.4-2.43-.06-1.27-.07-1.65-.07-4.85s.012-3.584.07-4.85c.054-1.17.24-1.98.4-2.43a3.37 3.37 0 01.9-1.45 3.37 3.37 0 011.45-.9c.45-.16 1.26-.35 2.43-.4 1.27-.06 1.65-.07 4.85-.07m0-2.2C8.736 0 8.332.013 7.052.072 5.782.13 4.79.334 4.03.626a5.58 5.58 0 00-2.02 1.32A5.58 5.58 0 00.69 4.03c-.292.76-.496 1.752-.554 3.022C.013 8.332 0 8.736 0 12c0 3.264.013 3.668.072 4.948.058 1.27.262 2.262.554 3.022a5.58 5.58 0 001.32 2.02 5.58 5.58 0 002.02 1.32c.76.292 1.752.496 3.022.554 1.28.059 1.684.072 4.948.072s3.668-.013 4.948-.072c1.27-.058 2.262-.262 3.022-.554a5.58 5.58 0 002.02-1.32 5.58 5.58 0 001.32-2.02c.292-.76.496-1.752.554-3.022.059-1.28.072-1.684.072-4.948s-.013-3.668-.072-4.948c-.058-1.27-.262-2.262-.554-3.022a5.58 5.58 0 00-1.32-2.02A5.58 5.58 0 0019.97.626c-.76-.292-1.752-.496-3.022-.554C15.668.013 15.264 0 12 0z"/>
+                            <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8z"/>
+                            <circle cx="18.406" cy="5.594" r="1.44"/>
+                        </svg>
+                    </a>
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/in/mahmud-un-nabi-056808285/" target="_blank" class="text-gray-400 hover:text-white transition" aria-label="LinkedIn">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M4.98 3.5C3.88 3.5 3 4.38 3 5.5S3.88 7.5 4.98 7.5 6.96 6.62 6.96 5.5 6.08 3.5 4.98 3.5zM3.5 8.98h2.96v11.52H3.5zM9.02 8.98h2.83v1.57h.04c.39-.74 1.34-1.52 2.76-1.52 2.96 0 3.5 1.95 3.5 4.49v6.98h-2.96v-6.19c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.36 1.6-2.36 3.25v6.3H9.02z"/>
+                        </svg>
+                    </a>
+                    <!-- GitHub -->
+                    <a href="https://github.com/Mahmud394" target="_blank" class="text-gray-400 hover:text-white transition" aria-label="GitHub">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 0a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6a3.2 3.2 0 00-1.3-1.8c-1-.7.1-.7.1-.7a2.5 2.5 0 011.9 1.3 2.6 2.6 0 003.5 1 2.6 2.6 0 01.8-1.6c-2.7-.3-5.5-1.3-5.5-5.7a4.5 4.5 0 011.2-3.1 4.2 4.2 0 01.1-3.1s1-.3 3.2 1.2a11 11 0 015.8 0c2.2-1.5 3.2-1.2 3.2-1.2.5 1.2.3 2.5.1 3.1a4.5 4.5 0 011.2 3.1c0 4.4-2.8 5.4-5.5 5.7a2.9 2.9 0 01.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0012 0z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Count-up Script -->
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            const speed = 100; // lower = faster
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const increment = Math.ceil(target / speed);
+
+                    if (count < target) {
+                        counter.innerText = count + increment;
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('event-search');
+            const clearSearchBtn = document.getElementById('clear-search');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                if (query.length > 0) {
+                    clearSearchBtn.classList.remove('hidden');
+                } else {
+                    clearSearchBtn.classList.add('hidden');
+                }
+                filterEvents();
+            });
+
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                this.classList.add('hidden');
+                filterEvents();
+            });
+
+            // Filter functionality
+            const categoryFilter = document.getElementById('filter-category');
+            const locationFilter = document.getElementById('filter-location');
+
+            categoryFilter.addEventListener('change', filterEvents);
+            locationFilter.addEventListener('change', filterEvents);
+        });
+
+        function filterEvents() {
+            const searchQuery = document.getElementById('event-search').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const location = document.getElementById('filter-location').value;
+            const eventCards = document.querySelectorAll('.event-card');
+            let visibleCount = 0;
+
+            eventCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p:last-of-type').textContent.toLowerCase();
+                const cardCategory = card.getAttribute('data-category');
+                const cardLocation = card.getAttribute('data-location');
+
+                const matchesSearch = searchQuery === '' || 
+                    title.includes(searchQuery) || 
+                    description.includes(searchQuery);
+                
+                const matchesCategory = category === '' || cardCategory === category;
+                const matchesLocation = location === '' || cardLocation === location;
+
+                if (matchesSearch && matchesCategory && matchesLocation) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('no-results');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('event-search').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-location').value = '';
+            document.getElementById('clear-search').classList.add('hidden');
+            filterEvents();
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
         function joinEvent(button, eventName) {
             const originalText = button.textContent;
-            button.textContent = 'Joining...';
+            button.innerHTML = '<span class="animate-spin mr-1"><i class="fas fa-spinner"></i></span> Joining...';
             button.disabled = true;
             button.classList.add('opacity-50');
             
             setTimeout(() => {
-                button.textContent = '✓ Joined!';
+                button.innerHTML = '<i class="fas fa-check mr-1"></i> Joined!';
                 button.classList.remove('bg-accent-600', 'hover:bg-accent-700');
                 button.classList.add('bg-secondary-600', 'hover:bg-secondary-700');
                 button.disabled = false;
                 button.classList.remove('opacity-50');
                 
                 // Show success message
-                showNotification(`Successfully joined "${eventName}"!`);
+                showNotification(`Successfully joined "${eventName}"!`, 'success');
             }, 1500);
         }
 
@@ -444,7 +904,9 @@
                     description: 'Join us for a community cleanup to protect our environment. We\'ll provide all necessary equipment including gloves, trash bags, and water. This is a great opportunity to meet like-minded people while making a positive impact on our environment.',
                     requirements: ['Comfortable walking shoes', 'Sun hat and sunscreen', 'Water bottle'],
                     duration: '4 hours (9:00 AM - 1:00 PM)',
-                    volunteers: '23/50 volunteers signed up'
+                    volunteers: '23/50 volunteers signed up',
+                    skills: ['Teamwork', 'Physical activity', 'Environmental awareness'],
+                    category: 'Environment'
                 },
                 'food-distribution': {
                     title: 'Food Distribution',
@@ -454,7 +916,9 @@
                     description: 'Help distribute meals to families in need. We\'ll be providing fresh food packages and warm meals to the local community. Volunteers will help with food preparation, packaging, and distribution.',
                     requirements: ['Hair net (provided)', 'Comfortable shoes', 'Positive attitude'],
                     duration: '3 hours (11:00 AM - 2:00 PM)',
-                    volunteers: '15/30 volunteers signed up'
+                    volunteers: '15/30 volunteers signed up',
+                    skills: ['Communication', 'Empathy', 'Organization'],
+                    category: 'Community'
                 },
                 'tree-planting': {
                     title: 'Tree Planting',
@@ -464,7 +928,9 @@
                     description: 'Help us plant native trees to restore the urban forest and combat climate change. We\'ll be planting oak, maple, and birch trees. All tools and instructions will be provided by experienced arborists.',
                     requirements: ['Work gloves', 'Old clothes', 'Sturdy shoes'],
                     duration: '5 hours (8:00 AM - 1:00 PM)',
-                    volunteers: '8/40 volunteers signed up'
+                    volunteers: '8/40 volunteers signed up',
+                    skills: ['Physical activity', 'Teamwork', 'Environmental awareness'],
+                    category: 'Environment'
                 },
                 'workshop': {
                     title: 'Educational Workshop',
@@ -474,7 +940,9 @@
                     description: 'Educational workshop on sustainable living practices for local community members. Topics include waste reduction, energy conservation, and sustainable transportation options.',
                     requirements: ['Notebook and pen', 'Open mind', 'Willingness to learn'],
                     duration: '2 hours (2:00 PM - 4:00 PM)',
-                    volunteers: '12/25 volunteers signed up'
+                    volunteers: '12/25 volunteers signed up',
+                    skills: ['Teaching', 'Communication', 'Public speaking'],
+                    category: 'Education'
                 },
                 'senior-care': {
                     title: 'Senior Care Visit',
@@ -484,7 +952,9 @@
                     description: 'Spend time with elderly residents, play games, share stories, and provide companionship. This is a rewarding opportunity to bring joy to seniors and learn from their experiences.',
                     requirements: ['Background check (provided)', 'Patience and empathy', 'Board games or books (optional)'],
                     duration: '3 hours (10:00 AM - 1:00 PM)',
-                    volunteers: '5/20 volunteers signed up'
+                    volunteers: '5/20 volunteers signed up',
+                    skills: ['Empathy', 'Active listening', 'Patience'],
+                    category: 'Community'
                 }
             };
 
@@ -493,32 +963,40 @@
                 document.getElementById('modal-event-title').textContent = event.title;
                 document.getElementById('event-details-content').innerHTML = `
                     <div class="space-y-4">
-                        <div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
                             <h4 class="font-semibold text-gray-900 mb-2">Event Details</h4>
                             <div class="space-y-2 text-sm">
-                                <p><span class="font-medium">Date & Time:</span> ${event.date}</p>
-                                <p><span class="font-medium">Location:</span> ${event.location}</p>
-                                <p><span class="font-medium">Organizer:</span> ${event.organizer}</p>
-                                <p><span class="font-medium">Duration:</span> ${event.duration}</p>
-                                <p><span class="font-medium">Volunteers:</span> ${event.volunteers}</p>
+                                <p class="flex items-center"><i class="fas fa-calendar-day text-gray-500 mr-2 w-4"></i> <span class="font-medium">Date & Time:</span> ${event.date}</p>
+                                <p class="flex items-center"><i class="fas fa-map-marker-alt text-gray-500 mr-2 w-4"></i> <span class="font-medium">Location:</span> ${event.location}</p>
+                                <p class="flex items-center"><i class="fas fa-users text-gray-500 mr-2 w-4"></i> <span class="font-medium">Organizer:</span> ${event.organizer}</p>
+                                <p class="flex items-center"><i class="fas fa-clock text-gray-500 mr-2 w-4"></i> <span class="font-medium">Duration:</span> ${event.duration}</p>
+                                <p class="flex items-center"><i class="fas fa-user-friends text-gray-500 mr-2 w-4"></i> <span class="font-medium">Volunteers:</span> ${event.volunteers}</p>
+                                <p class="flex items-center"><i class="fas fa-tag text-gray-500 mr-2 w-4"></i> <span class="font-medium">Category:</span> ${event.category}</p>
                             </div>
                         </div>
                         
-                        <div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
                             <h4 class="font-semibold text-gray-900 mb-2">Description</h4>
                             <p class="text-sm text-gray-700">${event.description}</p>
                         </div>
                         
-                        <div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
                             <h4 class="font-semibold text-gray-900 mb-2">What to Bring</h4>
                             <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                                 ${event.requirements.map(req => `<li>${req}</li>`).join('')}
                             </ul>
                         </div>
                         
-                        <div class="pt-4 border-t">
-                            <button onclick="joinEventFromModal('${event.title}')" class="w-full bg-accent-600 hover:bg-accent-700 text-white px-4 py-3 rounded-lg font-medium transition-colors">
-                                Join This Event
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">Skills You'll Develop</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${event.skills.map(skill => `<span class="px-2 py-1 text-xs rounded-full bg-accent-100 text-accent-800">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <button onclick="showConfirmation('Join Event', 'Are you sure you want to join this event?', '${event.title}')" class="w-full bg-accent-600 hover:bg-accent-700 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+                                <i class="fas fa-user-plus mr-2"></i> Join This Event
                             </button>
                         </div>
                     </div>
@@ -531,33 +1009,33 @@
             document.getElementById('event-details-modal').classList.add('hidden');
         }
 
-        function joinEventFromModal(eventName) {
+        function showConfirmation(title, message, eventName) {
+            document.getElementById('confirmation-title').textContent = title;
+            document.getElementById('confirmation-message').textContent = message;
+            document.getElementById('confirmation-action-button').setAttribute('data-event', eventName);
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+        }
+
+        function hideConfirmation() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+
+        function confirmAction() {
+            const eventName = document.getElementById('confirmation-action-button').getAttribute('data-event');
+            hideConfirmation();
             hideEventDetails();
-            showNotification(`Successfully joined "${eventName}"!`);
+            showNotification(`Successfully joined "${eventName}"!`, 'success');
         }
 
-        function searchEvents(query) {
-            const cards = document.querySelectorAll('#events-grid > div');
-            cards.forEach(card => {
-                const title = card.querySelector('h3').textContent.toLowerCase();
-                const description = card.querySelector('p:last-of-type').textContent.toLowerCase();
-                const location = card.querySelector('p').textContent.toLowerCase();
-                
-                if (title.includes(query.toLowerCase()) || 
-                    description.includes(query.toLowerCase()) || 
-                    location.includes(query.toLowerCase()) ||
-                    query === '') {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-secondary-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
-            notification.textContent = message;
+            const icon = type === 'success' ? 
+                '<i class="fas fa-check-circle mr-2"></i>' : 
+                '<i class="fas fa-exclamation-circle mr-2"></i>';
+            const bgColor = type === 'success' ? 'bg-green-600' : 'bg-red-600';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center transform transition-all duration-300 translate-x-full`;
+            notification.innerHTML = `${icon}${message}`;
             
             document.body.appendChild(notification);
             
@@ -573,45 +1051,54 @@
             }, 3000);
         }
     </script>
+    <!-- Modals would go here -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-<footer class="bg-gray-800 text-white py-6 text-center">
-  <p class="mb-4">© 2025 VolunteerHub. All rights reserved.</p>
-  <div class="flex justify-center space-x-6">
-    <!-- Facebook -->
-    <a href="https://www.facebook.com/MAHMUDUNNAB1" target="_blank" class="hover:text-blue-500" aria-label="Facebook">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.54V9.8c0-2.51 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.77l-.44 2.89h-2.33v6.99C18.34 21.13 22 17 22 12z"/>
-      </svg>
-    </a>
-    <!-- Twitter -->
-    <a href="https://x.com/MahmudU00814521" target="_blank" class="hover:text-blue-400" aria-label="Twitter">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4 1.64a9.09 9.09 0 01-2.88 1.1A4.52 4.52 0 0016.62.49a4.49 4.49 0 00-4.38 5.52A12.94 12.94 0 013 2.24a4.51 4.51 0 001.39 6.01A4.5 4.5 0 012 7.16v.06a4.52 4.52 0 003.61 4.42 4.52 4.52 0 01-2.03.08 4.52 4.52 0 004.21 3.13A9.05 9.05 0 012 19.54 12.86 12.86 0 008.29 21c7.55 0 11.67-6.26 11.67-11.7 0-.18-.01-.36-.02-.54A8.36 8.36 0 0023 3z"/>
-      </svg>
-    </a>
-    <!-- Instagram -->
-    <a href="https://www.instagram.com/mahmud.un.nabi/" target="_blank" class="hover:text-pink-500" aria-label="Instagram">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M12 2.2c3.2 0 3.584.012 4.85.07 1.17.054 1.98.24 2.43.4.59.21 1.01.46 1.45.9.44.44.69.86.9 1.45.16.45.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.98-.4 2.43a3.37 3.37 0 01-.9 1.45 3.37 3.37 0 01-1.45.9c-.45.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.98-.24-2.43-.4a3.37 3.37 0 01-1.45-.9 3.37 3.37 0 01-.9-1.45c-.16-.45-.35-1.26-.4-2.43-.06-1.27-.07-1.65-.07-4.85s.012-3.584.07-4.85c.054-1.17.24-1.98.4-2.43a3.37 3.37 0 01.9-1.45 3.37 3.37 0 011.45-.9c.45-.16 1.26-.35 2.43-.4 1.27-.06 1.65-.07 4.85-.07m0-2.2C8.736 0 8.332.013 7.052.072 5.782.13 4.79.334 4.03.626a5.58 5.58 0 00-2.02 1.32A5.58 5.58 0 00.69 4.03c-.292.76-.496 1.752-.554 3.022C.013 8.332 0 8.736 0 12c0 3.264.013 3.668.072 4.948.058 1.27.262 2.262.554 3.022a5.58 5.58 0 001.32 2.02 5.58 5.58 0 002.02 1.32c.76.292 1.752.496 3.022.554 1.28.059 1.684.072 4.948.072s3.668-.013 4.948-.072c1.27-.058 2.262-.262 3.022-.554a5.58 5.58 0 002.02-1.32 5.58 5.58 0 001.32-2.02c.292-.76.496-1.752.554-3.022.059-1.28.072-1.684.072-4.948s-.013-3.668-.072-4.948c-.058-1.27-.262-2.262-.554-3.022a5.58 5.58 0 00-1.32-2.02A5.58 5.58 0 0019.97.626c-.76-.292-1.752-.496-3.022-.554C15.668.013 15.264 0 12 0z"/>
-        <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a4 4 0 110-8 4 4 0 010 8z"/>
-        <circle cx="18.406" cy="5.594" r="1.44"/>
-      </svg>
-    </a>
-    <!-- LinkedIn -->
-    <a href="https://www.linkedin.com/in/mahmud-un-nabi-056808285/" target="_blank" class="hover:text-blue-700" aria-label="LinkedIn">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M4.98 3.5C3.88 3.5 3 4.38 3 5.5S3.88 7.5 4.98 7.5 6.96 6.62 6.96 5.5 6.08 3.5 4.98 3.5zM3.5 8.98h2.96v11.52H3.5zM9.02 8.98h2.83v1.57h.04c.39-.74 1.34-1.52 2.76-1.52 2.96 0 3.5 1.95 3.5 4.49v6.98h-2.96v-6.19c0-1.47-.03-3.36-2.05-3.36-2.05 0-2.36 1.6-2.36 3.25v6.3H9.02z"/>
-      </svg>
-    </a>
-    <!-- GitHub -->
-    <a href="https://github.com/Mahmud394" target="_blank" class="hover:text-gray-400" aria-label="GitHub">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M12 0a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6a3.2 3.2 0 00-1.3-1.8c-1-.7.1-.7.1-.7a2.5 2.5 0 011.9 1.3 2.6 2.6 0 003.5 1 2.6 2.6 0 01.8-1.6c-2.7-.3-5.5-1.3-5.5-5.7a4.5 4.5 0 011.2-3.1 4.2 4.2 0 01.1-3.1s1-.3 3.2 1.2a11 11 0 015.8 0c2.2-1.5 3.2-1.2 3.2-1.2.5 1.2.3 2.5.1 3.1a4.5 4.5 0 011.2 3.1c0 4.4-2.8 5.4-5.5 5.7a2.9 2.9 0 01.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0012 0z"/>
-      </svg>
-    </a>
-  </div>
-</footer>
+    // User menu dropdown
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
 
+    userMenuButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent click from closing immediately
+        const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+        userMenuButton.setAttribute('aria-expanded', !isExpanded);
+        userMenu.classList.toggle('hidden');
+    });
 
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+            userMenuButton.setAttribute('aria-expanded', 'false');
+            userMenu.classList.add('hidden');
+        }
+    });
+
+    // Placeholder modal functions
+    window.showCreateUserModal = function() {
+        alert('Create User Modal would open here');
+    }
+
+    window.showCreateEventModal = function() {
+        alert('Create Event Modal would open here');
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+});
+</script>
 </body>
 </html>
