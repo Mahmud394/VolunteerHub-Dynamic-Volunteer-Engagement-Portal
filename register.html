@@ -34,7 +34,8 @@
           },
           animation: {
             'fade-in': 'fadeIn 0.5s ease-out',
-            'slide-up': 'slideUp 0.4s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'float': 'float 3s ease-in-out infinite'
           },
           keyframes: {
             fadeIn: {
@@ -44,6 +45,10 @@
             slideUp: {
               '0%': { transform: 'translateY(20px)', opacity: '0' },
               '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' },
             }
           }
         }
@@ -51,60 +56,59 @@
     }
   </script>
 </head>
-<body class="bg-gradient-to-br from-primary-50 to-blue-100 min-h-screen">
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8">
-            <!-- Back Button -->
-            <div class="text-center">
-                <a href="index.html" class="inline-flex items-center text-primary-600 hover:text-primary-800 transition-colors mb-6">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Back to Welcome
-                </a>
-            </div>
-    
+<body class="bg-gradient-to-br from-primary-50 to-blue-100 min-h-screen flex items-center justify-center">
+  
+  <div class="bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl max-w-lg w-full p-8 space-y-8 animate-slide-up animate-float">
+    <!-- Back Button -->
+    <div>
+      <a href="index.html" class="inline-flex items-center text-primary-600 hover:text-primary-800 transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Welcome
+      </a>
+    </div>
 
- 
-    <h2 class="text-3xl font-bold text-center text-primary-600 mb-6">Create Your Account</h2>
+    <!-- Title -->
+    <h2 class="text-3xl font-bold text-center text-primary-700">Create Your Account</h2>
+    <p class="text-center text-gray-500 text-sm">Join us and start making an impact!</p>
 
+    <!-- Form -->
     <form action="#" method="POST" class="space-y-5">
       <!-- Full Name -->
       <div>
         <label class="block text-sm font-medium text-gray-700">Full Name</label>
-        <input type="text" name="name" required required placeholder="Enter your Name"
-          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+        <input type="text" name="name" placeholder="Enter your Name" required
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-400 transition" />
       </div>
 
       <!-- Email -->
       <div>
         <label class="block text-sm font-medium text-gray-700">Email</label>
-        <input type="email" name="email" required required placeholder="name@gmail.com"
-          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+        <input type="email" name="email" placeholder="name@gmail.com" required
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-400 transition" />
       </div>
 
       <!-- Password -->
       <div>
         <label class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" name="password" required placeholder="Enter your password"
-          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+        <input type="password" name="password" placeholder="Enter your password" required
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-400 transition" />
       </div>
 
       <!-- Confirm Password -->
       <div>
         <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
-        
-        <input type="password" name="confirm_password" required placeholder="Confirm Password"
-          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-400 transition" />
       </div>
 
       <!-- Role Selection -->
       <div>
         <label class="block text-sm font-medium text-gray-700">Role</label>
         <select name="role" required
-          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 hover:border-primary-400 transition">
           <option value="">Select Role</option>
-          <!--<option value="admin">Admin</option> -->
           <option value="ngo">NGO</option>
           <option value="volunteer">Volunteer</option>
         </select>
@@ -120,7 +124,7 @@
     </form>
 
     <!-- Login Redirect -->
-    <p class="text-center text-sm text-gray-600 mt-6">
+    <p class="text-center text-sm text-gray-600">
       Already have an account? 
       <a href="index.html" class="text-primary-600 hover:underline">Login</a>
     </p>
