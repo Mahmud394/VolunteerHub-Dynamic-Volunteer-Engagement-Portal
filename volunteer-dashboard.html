@@ -72,7 +72,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </div>
-                        <h1 class="text-xl font-semibold text-gray-900">Volunteer Dashboard</h1>
+                        <h1 class="text-xl font-semibold text-gray-900">VolunteerHub Volunteer</h1>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -135,35 +135,40 @@
                         </div>
                     </div>
                     <div class="relative group">
-    <button id="user-menu-button" class="flex items-center space-x-1 focus:outline-none">
+    <button id="user-menu-button" type="button" class="flex items-center space-x-1 focus:outline-none" 
+            aria-expanded="false" aria-haspopup="true" aria-controls="user-menu">
         <span class="text-sm text-gray-700">
             Welcome, <span class="font-medium">Volunteer</span>
         </span>
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-gray-500 transition-transform group-hover:rotate-180" 
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
         </svg>
     </button>
 
-    <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <!-- Profile Icon -->
-            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="user-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-1 z-10 border border-gray-100">
+        <button type="button" onclick="window.showProfileModal()" 
+                class="flex w-full items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.879 6.196M15 15a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Profile
-        </a>
-        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <!-- Settings Icon -->
-            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        </button>
+        
+        <button type="button" onclick="window.showSettingsModal()" 
+                class="flex w-full items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                     d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.591 1.01c1.52-.88 3.391.991 2.511 2.511a1.724 1.724 0 001.01 2.591c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.01 2.591c.88 1.52-.991 3.391-2.511 2.511a1.724 1.724 0 00-2.591 1.01c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.591-1.01c-1.52.88-3.391-.991-2.511-2.511a1.724 1.724 0 00-1.01-2.591c-1.756-.426-1.756-2.924 0-3.35.88-1.52-.991-3.391 2.511-2.511 1.52-.88 3.391.991 2.511 2.511z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             Settings
-        </a>
-        <a href="index.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
-            <!-- Logout Icon -->
-            <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        </button>
+       
+        <div class="border-t border-gray-100 my-1"></div>
+        
+        <a href="index.html" class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:outline-none font-medium">
+            <svg class="w-5 h-5 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
             </svg>
@@ -776,6 +781,223 @@
         </div>
     </footer>
 
+<!-- Volunteer Profile Modal -->
+<div id="profile-modal" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-content">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Volunteer Profile</h2>
+          <p class="text-sm text-gray-500 mt-1">Your contributions and achievements</p>
+        </div>
+        <button onclick="closeModal('profile-modal')" class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <form class="space-y-5">
+        <!-- Volunteer Profile Picture -->
+        <div class="flex flex-col items-center space-y-3">
+          <div class="relative group">
+            <img id="volunteer-picture-preview" src="images/volunteer1.jpg" 
+                 class="w-24 h-24 rounded-full object-cover border-2 border-green-100 shadow-sm">
+            <div class="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <input type="file" id="volunteer-picture-upload" accept="image/*" class="hidden">
+              <label for="volunteer-picture-upload" class="text-white bg-green-500 rounded-full p-2 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </label>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500">Click image to update</p>
+        </div>
+
+        <!-- Volunteer Stats Cards -->
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="bg-blue-50 p-3 rounded-lg text-center">
+            <p class="text-2xl font-bold text-blue-600">23</p>
+            <p class="text-xs text-blue-500">Events</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-lg text-center">
+            <p class="text-2xl font-bold text-green-600">127</p>
+            <p class="text-xs text-green-500">Hours</p>
+          </div>
+          <div class="bg-purple-50 p-3 rounded-lg text-center">
+            <p class="text-2xl font-bold text-purple-600">89</p>
+            <p class="text-xs text-purple-500">Impact Score</p>
+          </div>
+        </div>
+
+        <!-- Personal Details -->
+        <div class="space-y-4">
+          <div class="space-y-1">
+            <label for="volunteer-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input id="volunteer-name" type="text" value="Md Oliul Islam" 
+                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                          hover:border-gray-300 placeholder-gray-400">
+          </div>
+          
+          <div class="space-y-1">
+            <label for="volunteer-email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input id="volunteer-email" type="email" value="oliulislam@gmail.com" 
+                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                          hover:border-gray-300 placeholder-gray-400">
+          </div>
+
+          <div class="space-y-1">
+            <label for="volunteer-phone" class="block text-sm font-medium text-gray-700">Phone</label>
+            <input id="volunteer-phone" type="tel" value="+8801712345678" 
+                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                          hover:border-gray-300 placeholder-gray-400">
+          </div>
+
+          <!-- Skills Section -->
+          <div class="space-y-1">
+            <label class="block text-sm font-medium text-gray-700">Skills</label>
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded-full flex items-center">
+                Teaching
+                <button type="button" class="ml-1 text-green-500 hover:text-green-700">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+              </span>
+              <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full flex items-center">
+                First Aid
+                <button type="button" class="ml-1 text-blue-500 hover:text-blue-700">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+              </span>
+              <button type="button" class="text-xs text-blue-600 hover:text-blue-800 flex items-center">
+                <svg class="w-4 h-4 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add skill
+              </button>
+            </div>
+          </div>
+
+          <!-- Experience Badges -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Achievements</label>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="flex flex-col items-center p-2 bg-yellow-50 rounded-lg">
+                <div class="w-8 h-8 mb-1 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                </div>
+                <span class="text-xs text-center">125+ Hours</span>
+              </div>
+              <div class="flex flex-col items-center p-2 bg-blue-50 rounded-lg">
+                <div class="w-8 h-8 mb-1 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <span class="text-xs text-center">Certified</span>
+              </div>
+              <div class="flex flex-col items-center p-2 bg-purple-50 rounded-lg">
+                <div class="w-8 h-8 mb-1 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-1a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v1h-3zM4.75 12.094A5.973 5.973 0 004 15v1H1v-1a3 3 0 013.75-2.906z"></path>
+                  </svg>
+                </div>
+                <span class="text-xs text-center">Mentor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="pt-4 flex justify-end space-x-3">
+          <button type="button" onclick="closeModal('profile-modal')" 
+                  class="px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition
+                         active:scale-95 transform">
+            Cancel
+          </button>
+          <button type="submit" 
+                  class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 
+                         focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition shadow-md hover:shadow-lg
+                         active:scale-95 transform">
+            Save Profile
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settings-modal" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-95 opacity-0 modal-content">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Application Settings</h2>
+          <p class="text-sm text-gray-500 mt-1">Customize your experience</p>
+        </div>
+        <button onclick="closeModal('settings-modal')" class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <form class="space-y-6">
+        <div class="space-y-1">
+          <label for="language-select" class="block text-sm font-medium text-gray-700">Language</label>
+          <div class="relative">
+            <select id="language-select" 
+                    class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition
+                           hover:border-gray-300 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjdjEwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ij48L3BvbHlsaW5lPjwvc3ZnPg==')] bg-no-repeat bg-[right_1rem_center] bg-[length:1.5rem_1.5rem]">
+              <option>English</option>
+              <option>Bangla</option>
+              <option>Spanish</option>
+              <option>French</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-gray-200 transition">
+          <div>
+            <label for="dark-mode" class="block text-sm font-medium text-gray-700 mb-1">Dark Mode</label>
+            <p class="text-xs text-gray-500">Switch between light and dark theme</p>
+          </div>
+          <div class="relative inline-block w-12 mr-2 align-middle select-none">
+            <input type="checkbox" id="dark-mode" class="sr-only toggle-checkbox">
+            <label for="dark-mode" class="block overflow-hidden h-6 rounded-full bg-gray-200 cursor-pointer toggle-label">
+              <span class="absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-200 ease-in-out toggle-dot"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="pt-4 flex justify-end space-x-3">
+          <button type="button" onclick="closeModal('settings-modal')" 
+                  class="px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition
+                         active:scale-95 transform">
+            Cancel
+          </button>
+          <button type="submit" 
+                  class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-md hover:shadow-lg
+                         active:scale-95 transform">
+            Save Preferences
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
     <!-- Count-up Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -1054,50 +1276,132 @@
     <!-- Modals would go here -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  // ===== User menu dropdown =====
+  const userMenuButton = document.getElementById('user-menu-button');
+  const userMenu = document.getElementById('user-menu');
 
-    // User menu dropdown
-    const userMenuButton = document.getElementById('user-menu-button');
-    const userMenu = document.getElementById('user-menu');
+  function closeDropdown() {
+    if (userMenuButton && userMenu) {
+      userMenuButton.setAttribute('aria-expanded', 'false');
+      userMenu.classList.add('hidden');
+    }
+  }
 
+  if (userMenuButton && userMenu) {
     userMenuButton.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent click from closing immediately
-        const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
-        userMenuButton.setAttribute('aria-expanded', !isExpanded);
-        userMenu.classList.toggle('hidden');
+      e.stopPropagation();
+      const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+      userMenuButton.setAttribute('aria-expanded', String(!isExpanded));
+      userMenu.classList.toggle('hidden');
     });
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
-        if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
-            userMenuButton.setAttribute('aria-expanded', 'false');
-            userMenu.classList.add('hidden');
+      if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+  }
+
+  // ===== Modal helpers (animation-aware) =====
+  function showModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+
+    // Show overlay
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Animate content in
+    const content = modal.querySelector('.modal-content');
+    if (content) {
+      // Ensure starting state for transition
+      content.classList.add('scale-95', 'opacity-0');
+      // Force reflow so transition runs
+      void content.offsetHeight;
+      content.classList.remove('scale-95', 'opacity-0');
+    }
+
+    // Close dropdown if open
+    closeDropdown();
+
+    // Focus on first input element
+    const firstInput = modal.querySelector('input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (firstInput) firstInput.focus();
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+
+    const content = modal.querySelector('.modal-content');
+    if (content) {
+      content.classList.add('scale-95', 'opacity-0');
+    }
+    
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 200); // Match your transition duration
+  }
+
+  // Expose for inline onclick=""
+  window.showProfileModal = () => showModal('profile-modal');
+  window.showSettingsModal = () => showModal('settings-modal');
+  window.closeModal = closeModal;
+
+  // Click backdrop to close
+  document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal(modal.id);
+    });
+  });
+
+  // Esc to close any open modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+        if (!modal.classList.contains('hidden')) closeModal(modal.id);
+      });
+    }
+  });
+
+  // ===== Profile picture upload =====
+  const profileUpload = document.getElementById('profile-upload');
+  const profilePreview = document.getElementById('profile-preview');
+  
+  if (profileUpload && profilePreview) {
+    profileUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profilePreview.src = event.target.result;
         }
+        reader.readAsDataURL(file);
+      }
     });
+    
+    profilePreview.addEventListener('click', function() {
+      profileUpload.click();
+    });
+  }
+   
 
-    // Placeholder modal functions
-    window.showCreateUserModal = function() {
-        alert('Create User Modal would open here');
-    }
-
-    window.showCreateEventModal = function() {
-        alert('Create Event Modal would open here');
-    }
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
+  // ===== Smooth scrolling for anchor links =====
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
+      }
     });
-
+  });
 });
 </script>
 </body>
